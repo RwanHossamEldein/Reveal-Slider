@@ -31,11 +31,15 @@ class _ScanScreenState extends State<ScanScreen> {
               left: position,
               top: 300,
               child: Container(
-                width: 50,
-                height: 50,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.blue,
+                width: 3,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.white.withOpacity(0.8),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
                 ),
               ),
             ),
