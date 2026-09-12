@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:reveal_slider/reveal_slider.dart';
 
 void main() {
@@ -30,18 +30,23 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
   int _currentLayer = 0;
   Axis _direction = Axis.vertical;
 
-  final List<Color> _colors = [
-    const Color(0xFF1E1E2C),
-    const Color(0xFF2D142C),
-    const Color(0xFF0F3460),
-    const Color(0xFF1B262C),
-  ];
-
-  final List<String> _titles = [
-    'Cyber City 🌃',
-    'Neon Sunset 🌅',
-    'Deep Ocean 🌊',
-    'Space Odyssey 🚀',
+  final List<Map<String, String>> _characters = [
+    {
+      'name': 'Batman 🦇',
+      'image': 'assets/batman.jpg',
+    },
+    {
+      'name': 'Spider-Man 🕷️',
+      'image': 'assets/spiderman.jpg',
+    },
+    {
+      'name': 'Detective Conan 🔍',
+      'image': 'assets/conan.jpg',
+    },
+    {
+      'name': 'Squidward (Shafiq) 🐙',
+      'image': 'assets/shafiq.jpg',
+    },
   ];
 
   @override
@@ -56,9 +61,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
           IconButton(
             tooltip: 'Toggle Direction',
             icon: Icon(
-              _direction == Axis.vertical
-                  ? Icons.swap_vert
-                  : Icons.swap_horiz,
+              _direction == Axis.vertical ? Icons.swap_vert : Icons.swap_horiz,
             ),
             onPressed: () {
               setState(() {
@@ -72,7 +75,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
       ),
       body: Stack(
         children: [
-          // 1. RevealSlider with 4 styled layers
+          // 1. RevealSlider with 4 character image layers
           RevealSlider(
             direction: _direction,
             onLayerChanged: (index) {
@@ -80,75 +83,75 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
                 _currentLayer = index;
               });
             },
-            layers: List.generate(
-              _titles.length,
-              (index) => Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      _colors[index],
-                      _colors[(index + 1) % _colors.length],
-                    ],
+            layers: _characters.map((item) {
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset(
+                    item['image']!,
+                    fit: BoxFit.cover,
                   ),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _titles[index],
-                        style: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                  // Dark gradient overlay at bottom for readability
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withValues(alpha: 0.6),
+                        ],
                       ),
-                      const SizedBox(height: 12),
-                      Text(
-                        'Layer  of ',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.white70,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
+                ],
+              );
+            }).toList(),
           ),
 
-          // 2. Overlay Layer indicator at the bottom
+          // 2. Overlay Layer indicator & character name at the bottom
           Positioned(
             bottom: 30,
             left: 20,
             right: 20,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.6),
+                color: Colors.black.withValues(alpha: 0.75),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: Colors.white24),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  _titles.length,
-                  (index) => AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    width: _currentLayer == index ? 24 : 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: _currentLayer == index
-                          ? Colors.cyanAccent
-                          : Colors.white30,
-                      borderRadius: BorderRadius.circular(4),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    _characters[_currentLayer]['name']!,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      _characters.length,
+                      (index) => AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        width: _currentLayer == index ? 24 : 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: _currentLayer == index
+                              ? Colors.cyanAccent
+                              : Colors.white30,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

@@ -4,7 +4,13 @@ A highly customizable, futuristic, and smooth **multi-layer reveal slider & scan
 
 ---
 
-##  Features
+## 🎬 Preview
+
+![Reveal Slider Demo](https://raw.githubusercontent.com/RwanHossamEldein/Reveal-Slider/main/example/assets/demo.gif)
+
+---
+
+## ✨ Features
 
 -  **Multi-Layer Support**: Transition endlessly through $N$ number of layers (not just 2 images!).
 -  **Any Widget as a Layer**: Works with Images, Videos, Custom Cards, Lottie animations, or any Flutter Widget.
