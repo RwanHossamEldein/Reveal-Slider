@@ -1,3 +1,4 @@
+import 'package:animated_scanner/glow_bar.dart';
 import 'package:animated_scanner/my_custom_clipper.dart';
 import 'package:flutter/material.dart';
 
@@ -66,10 +67,9 @@ class _ScanScreenState extends State<ScanScreen> {
           }
 
           return Listener(
-            // يعمل على التليفون باللمس والسحب
             onPointerMove: (event) =>
                 _updatePosition(event.localPosition, constraints),
-            // يعمل على الكمبيوتر بالماوس (Hover)
+
             onPointerHover: (event) =>
                 _updatePosition(event.localPosition, constraints),
             child: ValueListenableBuilder<double>(
@@ -81,7 +81,6 @@ class _ScanScreenState extends State<ScanScreen> {
                 return Stack(
                   fit: StackFit.expand,
                   children: [
-                    // 1️⃣ الصورة الأساسية الحالية (كاملة في الخلفية بدون أي انقطاع)
                     widget.layers[baseIndex],
 
                     // 2️⃣ الصورة التالية (تنكشف بسلاسة مع حركة السحب من 0 إلى 100%)
@@ -100,7 +99,7 @@ class _ScanScreenState extends State<ScanScreen> {
                         top: 0,
                         bottom: 0,
                         width: 3,
-                        child: _buildGlowBar(),
+                        child: GlowBar(),
                       )
                     else
                       Positioned(
@@ -108,7 +107,7 @@ class _ScanScreenState extends State<ScanScreen> {
                         left: 0,
                         right: 0,
                         height: 3,
-                        child: _buildGlowBar(),
+                        child: GlowBar(),
                       ),
                   ],
                 );
@@ -116,26 +115,6 @@ class _ScanScreenState extends State<ScanScreen> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildGlowBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.white.withValues(alpha: 0.9),
-            blurRadius: 15,
-            spreadRadius: 3,
-          ),
-          BoxShadow(
-            color: Colors.cyanAccent.withValues(alpha: 0.7),
-            blurRadius: 8,
-            spreadRadius: 2,
-          ),
-        ],
       ),
     );
   }
