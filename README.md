@@ -6,8 +6,9 @@ A highly customizable, futuristic, and smooth **multi-layer reveal slider & scan
 
 ## 🎬 Preview
 
-![Reveal Slider Demo](https://raw.githubusercontent.com/RwanHossamEldein/Reveal-Slider/main/example/assets/demo.gif)
+![Reveal Slider web Demo](https://raw.githubusercontent.com/RwanHossamEldein/Reveal-Slider/main/example/assets/web_demo.gif)
 
+![Reveal Slider mobile Demo](https://raw.githubusercontent.com/RwanHossamEldein/Reveal-Slider/main/example/assets/mobile_demo.gif)
 ---
 
 ## ✨ Features
