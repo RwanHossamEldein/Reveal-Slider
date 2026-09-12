@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class MyCustomClipper extends CustomClipper<Rect> {
   final double position;
   final Axis direction;
-  final bool revealFromStart; // هل الكشف يبدأ من البداية أم من النهاية
-
+  final bool revealFromStart;
   const MyCustomClipper({
     required this.position,
     this.direction = Axis.horizontal,

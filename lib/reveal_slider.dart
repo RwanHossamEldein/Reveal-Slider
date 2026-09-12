@@ -5,11 +5,15 @@ import 'package:flutter/material.dart';
 class RevealSlider extends StatefulWidget {
   final List<Widget> layers;
   final Axis direction;
+  final Widget? transistor;
+  final ValueChanged<int>? onLayerChanged;
 
   const RevealSlider({
     super.key,
     required this.layers,
     this.direction = Axis.vertical,
+    this.transistor,
+    this.onLayerChanged,
   });
 
   @override
@@ -48,6 +52,7 @@ class _RevealSliderState extends State<RevealSlider> {
           _currentIndex = (_currentIndex + 1) % widget.layers.length;
           _revealFromStart = false;
         });
+        widget.onLayerChanged?.call(_currentIndex);
       }
     } else {
       if (position.value <= 2.0) {
@@ -55,6 +60,7 @@ class _RevealSliderState extends State<RevealSlider> {
           _currentIndex = (_currentIndex + 1) % widget.layers.length;
           _revealFromStart = true;
         });
+        widget.onLayerChanged?.call(_currentIndex);
       }
     }
   }
@@ -63,63 +69,60 @@ class _RevealSliderState extends State<RevealSlider> {
   Widget build(BuildContext context) {
     final isHorizontal = widget.direction == Axis.horizontal;
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (!_isInitialized) {
-            position.value = 0.0;
-            _isInitialized = true;
-          }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (!_isInitialized) {
+          position.value = 0.0;
+          _isInitialized = true;
+        }
 
-          return Listener(
-            onPointerMove: (event) =>
-                _updatePosition(event.localPosition, constraints),
-            onPointerHover: (event) =>
-                _updatePosition(event.localPosition, constraints),
-            child: ValueListenableBuilder<double>(
-              valueListenable: position,
-              builder: (context, currentPos, child) {
-                final baseIndex = _currentIndex;
-                final nextIndex = (_currentIndex + 1) % widget.layers.length;
+        return Listener(
+          onPointerMove: (event) =>
+              _updatePosition(event.localPosition, constraints),
+          onPointerHover: (event) =>
+              _updatePosition(event.localPosition, constraints),
+          child: ValueListenableBuilder<double>(
+            valueListenable: position,
+            builder: (context, currentPos, child) {
+              final baseIndex = _currentIndex;
+              final nextIndex = (_currentIndex + 1) % widget.layers.length;
 
-                return Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    widget.layers[baseIndex],
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  widget.layers[baseIndex],
 
-                    ClipRect(
-                      clipper: MyCustomClipper(
-                        position: currentPos,
-                        direction: widget.direction,
-                        revealFromStart: _revealFromStart,
-                      ),
-                      child: widget.layers[nextIndex],
+                  ClipRect(
+                    clipper: MyCustomClipper(
+                      position: currentPos,
+                      direction: widget.direction,
+                      revealFromStart: _revealFromStart,
                     ),
+                    child: widget.layers[nextIndex],
+                  ),
 
-                    if (isHorizontal)
-                      Positioned(
-                        left: currentPos - 1.5,
-                        top: 0,
-                        bottom: 0,
-                        width: 3,
-                        child: const GlowBar(),
-                      )
-                    else
-                      Positioned(
-                        top: currentPos - 1.5,
-                        left: 0,
-                        right: 0,
-                        height: 3,
-                        child: const GlowBar(),
-                      ),
-                  ],
-                );
-              },
-            ),
-          );
-        },
-      ),
+                  if (isHorizontal)
+                    Positioned(
+                      left: currentPos - 1.5,
+                      top: 0,
+                      bottom: 0,
+                      width: 3,
+                      child: widget.transistor ?? const GlowBar(),
+                    )
+                  else
+                    Positioned(
+                      top: currentPos - 1.5,
+                      left: 0,
+                      right: 0,
+                      height: 3,
+                      child: widget.transistor ?? const GlowBar(),
+                    ),
+                ],
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
