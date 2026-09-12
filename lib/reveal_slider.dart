@@ -81,6 +81,7 @@ class _RevealSliderState extends State<RevealSlider> {
         }
 
         return Listener(
+          behavior: HitTestBehavior.opaque,
           onPointerMove: (event) =>
               _updatePosition(event.localPosition, constraints),
           onPointerHover: (event) =>
@@ -94,15 +95,17 @@ class _RevealSliderState extends State<RevealSlider> {
               return Stack(
                 fit: StackFit.expand,
                 children: [
-                  widget.layers[baseIndex],
+                  IgnorePointer(child: widget.layers[baseIndex]),
 
-                  ClipRect(
-                    clipper: RevealClipper(
-                      position: currentPos,
-                      direction: widget.direction,
-                      revealFromStart: _revealFromStart,
+                  IgnorePointer(
+                    child: ClipRect(
+                      clipper: RevealClipper(
+                        position: currentPos,
+                        direction: widget.direction,
+                        revealFromStart: _revealFromStart,
+                      ),
+                      child: widget.layers[nextIndex],
                     ),
-                    child: widget.layers[nextIndex],
                   ),
 
                   if (isHorizontal)
@@ -111,7 +114,9 @@ class _RevealSliderState extends State<RevealSlider> {
                       top: 0,
                       bottom: 0,
                       width: 3,
-                      child: widget.customDivider ?? const RevealGlowBar(),
+                      child: IgnorePointer(
+                        child: widget.customDivider ?? const RevealGlowBar(),
+                      ),
                     )
                   else
                     Positioned(
@@ -119,7 +124,9 @@ class _RevealSliderState extends State<RevealSlider> {
                       left: 0,
                       right: 0,
                       height: 3,
-                      child: widget.customDivider ?? const RevealGlowBar(),
+                      child: IgnorePointer(
+                        child: widget.customDivider ?? const RevealGlowBar(),
+                      ),
                     ),
                 ],
               );
