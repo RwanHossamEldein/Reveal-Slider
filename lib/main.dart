@@ -13,7 +13,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const ScanScreen(),
+      home: ScanScreen(
+        direction: Axis.vertical,
+        layers: [
+          Image.asset('assets/images/batman.jpg', fit: BoxFit.cover),
+          Image.asset('assets/images/spiderman.jpg', fit: BoxFit.cover),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.amber,
+              shape: BoxShape.circle,
+              border: Border.all(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
