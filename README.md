@@ -11,7 +11,7 @@ A highly customizable, futuristic, and smooth **multi-layer reveal slider & scan
 ![Reveal Slider mobile Demo](https://raw.githubusercontent.com/RwanHossamEldein/Reveal-Slider/main/example/assets/mobile_demo.gif)
 ---
 
-## ✨ Features
+##  Features
 
 -  **Multi-Layer Support**: Transition endlessly through $N$ number of layers (not just 2 images!).
 -  **Any Widget as a Layer**: Works with Images, Videos, Custom Cards, Lottie animations, or any Flutter Widget.
@@ -113,7 +113,9 @@ RevealSlider(
 | `layers` | `List<Widget>` | **Required** | List of widgets/layers to reveal (minimum 2 layers). |
 | `direction` | `Axis` | `Axis.vertical` | The transition axis (`Axis.vertical` or `Axis.horizontal`). |
 | `customDivider` | `Widget?` | `null` | Optional custom widget to replace the default `RevealGlowBar`. |
+| `edgeThreshold` | `double` | `25.0` | Margin distance in pixels from the edge to trigger layer transition. |
 | `onLayerChanged`| `ValueChanged<int>?` | `null` | Callback triggered whenever a layer transition completes. |
+
 
 ---
 

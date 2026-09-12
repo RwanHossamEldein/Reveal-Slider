@@ -9,15 +9,24 @@ class RevealSlider extends StatefulWidget {
   final Widget? customDivider;
   final ValueChanged<int>? onLayerChanged;
 
+  /// The distance in pixels from the edge required to trigger a layer transition.
+  /// Defaults to 25.0 pixels so the user doesn't need to touch the exact edge.
+  final double edgeThreshold;
+
   const RevealSlider({
     super.key,
     required this.layers,
     this.direction = Axis.vertical,
     this.customDivider,
     this.onLayerChanged,
+    this.edgeThreshold = 25.0,
   }) : assert(
          layers.length >= 2,
          'RevealSlider requires at least 2 layers to perform transitions.',
+       ),
+       assert(
+         edgeThreshold >= 0.0,
+         'edgeThreshold must be non-negative.',
        );
 
   @override
@@ -49,9 +58,10 @@ class _RevealSliderState extends State<RevealSlider> {
         : localPosition.dy;
 
     _position.value = currentTouch.clamp(0.0, totalSize);
+    final threshold = widget.edgeThreshold.clamp(2.0, totalSize / 4);
 
     if (_revealFromStart) {
-      if (_position.value >= totalSize - 2.0) {
+      if (_position.value >= totalSize - threshold) {
         setState(() {
           _currentIndex = (_currentIndex + 1) % widget.layers.length;
           _revealFromStart = false;
@@ -59,7 +69,7 @@ class _RevealSliderState extends State<RevealSlider> {
         widget.onLayerChanged?.call(_currentIndex);
       }
     } else {
-      if (_position.value <= 2.0) {
+      if (_position.value <= threshold) {
         setState(() {
           _currentIndex = (_currentIndex + 1) % widget.layers.length;
           _revealFromStart = true;
