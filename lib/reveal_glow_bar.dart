@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class GlowBar extends StatelessWidget {
-  const GlowBar({super.key});
+class RevealGlowBar extends StatelessWidget {
+  const RevealGlowBar({super.key});
 
   @override
   Widget build(BuildContext context) {

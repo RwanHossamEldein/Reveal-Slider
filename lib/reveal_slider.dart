@@ -1,20 +1,24 @@
-import 'package:animated_scanner/glow_bar.dart';
-import 'package:animated_scanner/my_custom_clipper.dart';
+import 'package:animated_scanner/reveal_glow_bar.dart';
+import 'package:animated_scanner/reveal_clipper.dart';
+
 import 'package:flutter/material.dart';
 
 class RevealSlider extends StatefulWidget {
   final List<Widget> layers;
   final Axis direction;
-  final Widget? transistor;
+  final Widget? customDivider;
   final ValueChanged<int>? onLayerChanged;
 
   const RevealSlider({
     super.key,
     required this.layers,
     this.direction = Axis.vertical,
-    this.transistor,
+    this.customDivider,
     this.onLayerChanged,
-  });
+  }) : assert(
+         layers.length >= 2,
+         'RevealSlider requires at least 2 layers to perform transitions.',
+       );
 
   @override
   State<RevealSlider> createState() => _RevealSliderState();
@@ -22,7 +26,7 @@ class RevealSlider extends StatefulWidget {
 
 class _RevealSliderState extends State<RevealSlider> {
   int _currentIndex = 0;
-  final ValueNotifier<double> position = ValueNotifier<double>(0.0);
+  final ValueNotifier<double> _position = ValueNotifier<double>(0.0);
   bool _isInitialized = false;
 
   // true: Swipe Down/Right to reveal the next item
@@ -31,7 +35,7 @@ class _RevealSliderState extends State<RevealSlider> {
 
   @override
   void dispose() {
-    position.dispose();
+    _position.dispose();
     super.dispose();
   }
 
@@ -44,10 +48,10 @@ class _RevealSliderState extends State<RevealSlider> {
         ? localPosition.dx
         : localPosition.dy;
 
-    position.value = currentTouch.clamp(0.0, totalSize);
+    _position.value = currentTouch.clamp(0.0, totalSize);
 
     if (_revealFromStart) {
-      if (position.value >= totalSize - 2.0) {
+      if (_position.value >= totalSize - 2.0) {
         setState(() {
           _currentIndex = (_currentIndex + 1) % widget.layers.length;
           _revealFromStart = false;
@@ -55,7 +59,7 @@ class _RevealSliderState extends State<RevealSlider> {
         widget.onLayerChanged?.call(_currentIndex);
       }
     } else {
-      if (position.value <= 2.0) {
+      if (_position.value <= 2.0) {
         setState(() {
           _currentIndex = (_currentIndex + 1) % widget.layers.length;
           _revealFromStart = true;
@@ -72,7 +76,7 @@ class _RevealSliderState extends State<RevealSlider> {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (!_isInitialized) {
-          position.value = 0.0;
+          _position.value = 0.0;
           _isInitialized = true;
         }
 
@@ -82,7 +86,7 @@ class _RevealSliderState extends State<RevealSlider> {
           onPointerHover: (event) =>
               _updatePosition(event.localPosition, constraints),
           child: ValueListenableBuilder<double>(
-            valueListenable: position,
+            valueListenable: _position,
             builder: (context, currentPos, child) {
               final baseIndex = _currentIndex;
               final nextIndex = (_currentIndex + 1) % widget.layers.length;
@@ -93,7 +97,7 @@ class _RevealSliderState extends State<RevealSlider> {
                   widget.layers[baseIndex],
 
                   ClipRect(
-                    clipper: MyCustomClipper(
+                    clipper: RevealClipper(
                       position: currentPos,
                       direction: widget.direction,
                       revealFromStart: _revealFromStart,
@@ -107,7 +111,7 @@ class _RevealSliderState extends State<RevealSlider> {
                       top: 0,
                       bottom: 0,
                       width: 3,
-                      child: widget.transistor ?? const GlowBar(),
+                      child: widget.customDivider ?? const RevealGlowBar(),
                     )
                   else
                     Positioned(
@@ -115,7 +119,7 @@ class _RevealSliderState extends State<RevealSlider> {
                       left: 0,
                       right: 0,
                       height: 3,
-                      child: widget.transistor ?? const GlowBar(),
+                      child: widget.customDivider ?? const RevealGlowBar(),
                     ),
                 ],
               );

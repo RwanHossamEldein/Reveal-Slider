@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class MyCustomClipper extends CustomClipper<Rect> {
+class RevealClipper extends CustomClipper<Rect> {
   final double position;
   final Axis direction;
   final bool revealFromStart;
-  const MyCustomClipper({
+  const RevealClipper({
     required this.position,
     this.direction = Axis.horizontal,
     this.revealFromStart = true,
@@ -24,7 +24,7 @@ class MyCustomClipper extends CustomClipper<Rect> {
   }
 
   @override
-  bool shouldReclip(covariant MyCustomClipper oldClipper) {
+  bool shouldReclip(covariant RevealClipper oldClipper) {
     return oldClipper.position != position ||
         oldClipper.revealFromStart != revealFromStart;
   }
