@@ -2,26 +2,28 @@ import 'package:animated_scanner/glow_bar.dart';
 import 'package:animated_scanner/my_custom_clipper.dart';
 import 'package:flutter/material.dart';
 
-class ScanScreen extends StatefulWidget {
-  final List<Widget> layers; // قائمة بالصور أو الـ Widgets (3 أو أكثر)
-  final Axis direction; // اتجاه المسح (أفقي أو رأسي)
+class RevealSlider extends StatefulWidget {
+  final List<Widget> layers;
+  final Axis direction;
 
-  const ScanScreen({
+  const RevealSlider({
     super.key,
     required this.layers,
-    this.direction = Axis.horizontal,
+    this.direction = Axis.vertical,
   });
 
   @override
-  State<ScanScreen> createState() => _ScanScreenState();
+  State<RevealSlider> createState() => _RevealSliderState();
 }
 
-class _ScanScreenState extends State<ScanScreen> {
-  // رقم الصورة الأساسية الحالية
+class _RevealSliderState extends State<RevealSlider> {
   int _currentIndex = 0;
-  // موضع الخط الفاصل الحالي على الشاشة
   final ValueNotifier<double> position = ValueNotifier<double>(0.0);
   bool _isInitialized = false;
+
+  // true: Swipe Down/Right to reveal the next item
+  // false: Swipe Up/Left to reveal the next item.
+  bool _revealFromStart = true;
 
   @override
   void dispose() {
@@ -38,14 +40,22 @@ class _ScanScreenState extends State<ScanScreen> {
         ? localPosition.dx
         : localPosition.dy;
 
-    // تحريك الخط بين بداية ونهاية الشاشة
     position.value = currentTouch.clamp(0.0, totalSize);
 
-    // إذا وصل الخط لنهاية السحبة بالكامل (100% من الشاشة)
-    if (position.value >= totalSize - 2.0) {
-      // نقلب للصورة التالية لتصبح هي الأساسية
-      _currentIndex = (_currentIndex + 1) % widget.layers.length;
-      position.value = 0.0; // إعادة الخط للبداية للسحبة التالية
+    if (_revealFromStart) {
+      if (position.value >= totalSize - 2.0) {
+        setState(() {
+          _currentIndex = (_currentIndex + 1) % widget.layers.length;
+          _revealFromStart = false;
+        });
+      }
+    } else {
+      if (position.value <= 2.0) {
+        setState(() {
+          _currentIndex = (_currentIndex + 1) % widget.layers.length;
+          _revealFromStart = true;
+        });
+      }
     }
   }
 
@@ -57,19 +67,14 @@ class _ScanScreenState extends State<ScanScreen> {
       backgroundColor: Colors.black,
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final totalSize = isHorizontal
-              ? constraints.maxWidth
-              : constraints.maxHeight;
-
           if (!_isInitialized) {
-            position.value = totalSize / 2;
+            position.value = 0.0;
             _isInitialized = true;
           }
 
           return Listener(
             onPointerMove: (event) =>
                 _updatePosition(event.localPosition, constraints),
-
             onPointerHover: (event) =>
                 _updatePosition(event.localPosition, constraints),
             child: ValueListenableBuilder<double>(
@@ -83,23 +88,22 @@ class _ScanScreenState extends State<ScanScreen> {
                   children: [
                     widget.layers[baseIndex],
 
-                    // 2️⃣ الصورة التالية (تنكشف بسلاسة مع حركة السحب من 0 إلى 100%)
                     ClipRect(
                       clipper: MyCustomClipper(
                         position: currentPos,
                         direction: widget.direction,
+                        revealFromStart: _revealFromStart,
                       ),
                       child: widget.layers[nextIndex],
                     ),
 
-                    // 3️⃣ الخط المتوهج المطابق لموضع الكشف
                     if (isHorizontal)
                       Positioned(
                         left: currentPos - 1.5,
                         top: 0,
                         bottom: 0,
                         width: 3,
-                        child: GlowBar(),
+                        child: const GlowBar(),
                       )
                     else
                       Positioned(
@@ -107,7 +111,7 @@ class _ScanScreenState extends State<ScanScreen> {
                         left: 0,
                         right: 0,
                         height: 3,
-                        child: GlowBar(),
+                        child: const GlowBar(),
                       ),
                   ],
                 );

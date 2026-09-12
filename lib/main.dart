@@ -1,4 +1,4 @@
-import 'package:animated_scanner/scan_screen.dart';
+import 'package:animated_scanner/reveal_slider.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ScanScreen(
+      home: RevealSlider(
         direction: Axis.vertical,
         layers: [
           Image.asset('assets/images/batman.jpg', fit: BoxFit.cover),
