@@ -4,7 +4,7 @@ A highly customizable, futuristic, and smooth **multi-layer reveal slider & scan
 
 ---
 
-## 🎬 Preview
+##  Preview
 
 ![Reveal Slider web Demo](https://raw.githubusercontent.com/RwanHossamEldein/Reveal-Slider/main/example/assets/web_demo.gif)
 
@@ -22,7 +22,7 @@ A highly customizable, futuristic, and smooth **multi-layer reveal slider & scan
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 Add `reveal_slider` to your `pubspec.yaml` dependencies:
 
@@ -106,7 +106,7 @@ RevealSlider(
 
 ---
 
-## ⚙️ Properties
+##  Properties
 
 | Property | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
@@ -119,14 +119,14 @@ RevealSlider(
 
 ---
 
-## 🛠️ Contributing
+##  Contributing
 
 Contributions, issues, and feature requests are welcome!
 Feel free to check the [issues page](https://github.com/RwanHossamEldein/Reveal-Slider/issues).
 
 ---
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
